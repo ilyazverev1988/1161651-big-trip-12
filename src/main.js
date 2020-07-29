@@ -324,32 +324,32 @@ const createSitePriceTemplate = () => {
   );
 };
 
-const render = (container, template, place) => {
+const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
 const siteMainInHeaderElement = document.querySelector(`.page-header`);
 const siteHeaderInHeaderElement = siteMainInHeaderElement.querySelector(`.trip-main__trip-controls`);
 
-render(siteHeaderInHeaderElement, createSiteMenuTemplate(), `beforeend`);
-render(siteHeaderInHeaderElement, createSiteFilterTemplate(), `beforeend`);
+render(siteHeaderInHeaderElement, createSiteMenuTemplate());
+render(siteHeaderInHeaderElement, createSiteFilterTemplate());
 
 const siteMainElement = document.querySelector(`.page-main`);
 const siteHeaderElement = siteMainElement.querySelector(`.trip-events`);
 
-render(siteHeaderElement, createSiteSortTemplate(), `beforeend`);
-render(siteHeaderElement, createSiteFormWithChangeTemplate(), `beforeend`);
-render(siteHeaderElement, createSiteDateTemplate(), `beforeend`);
+render(siteHeaderElement, createSiteSortTemplate());
+render(siteHeaderElement, createSiteFormWithChangeTemplate());
+render(siteHeaderElement, createSiteDateTemplate());
 
 const siteTripEventsElement = siteMainElement.querySelector(`.trip-events__list`);
 
-for (let i = 0; i < WAYPOINT_COUNT; i++) {
-  render(siteTripEventsElement, createSiteWaypointTemplate(), `beforeend`);
-}
+Array(WAYPOINT_COUNT).fill(``).forEach(() => {
+  render(siteTripEventsElement, createSiteWaypointTemplate());
+});
 
 // дополнительно
 const siteTripInMainElement = siteMainInHeaderElement.querySelector(`.trip-main`);
 render(siteTripInMainElement, createSiteInfoRouteTemplate(), `afterbegin`);
 
 const siteTripInfoMainElement = siteMainInHeaderElement.querySelector(`.trip-main__trip-info`);
-render(siteTripInfoMainElement, createSitePriceTemplate(), `beforeend`);
+render(siteTripInfoMainElement, createSitePriceTemplate());
