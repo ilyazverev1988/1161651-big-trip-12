@@ -2,16 +2,15 @@ import {createSiteMenuTemplate} from "./view/site-menu.js";
 import {createSiteFilterTemplate} from "./view/site-filter.js";
 import {createSiteSortTemplate} from "./view/site-sort.js";
 import {createSiteFormWithChangeTemplate} from "./view/site-form-with-change";
-import {createSiteDateTemplate} from "./view/site-date.js";
 import {createSiteWaypointTemplate} from "./view/site-waypoint.js";
 import {createSiteInfoRouteTemplate} from "./view/site-info-route.js";
 import {createSitePriceTemplate} from "./view/site-price.js";
+import {generateWaypoint} from "./mock/waypoint.js";
+import {render} from "./mock/utils";
 
-const WAYPOINT_COUNT = 3;
-
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
+const WAYPOINT_COUNT = 15;
+const tasks = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint);
+console.log(tasks);
 
 const siteMainInHeaderElement = document.querySelector(`.page-header`);
 const siteHeaderInHeaderElement = siteMainInHeaderElement.querySelector(`.trip-main__trip-controls`);
@@ -23,14 +22,11 @@ const siteMainElement = document.querySelector(`.page-main`);
 const siteHeaderElement = siteMainElement.querySelector(`.trip-events`);
 
 render(siteHeaderElement, createSiteSortTemplate());
-render(siteHeaderElement, createSiteFormWithChangeTemplate());
-render(siteHeaderElement, createSiteDateTemplate());
+render(siteHeaderElement, createSiteFormWithChangeTemplate(generateWaypoint(), false));
 
-const siteTripEventsElement = siteMainElement.querySelector(`.trip-events__list`);
-
-Array(WAYPOINT_COUNT).fill(``).forEach(() => {
-  render(siteTripEventsElement, createSiteWaypointTemplate());
-});
+for (let i = 0; i < WAYPOINT_COUNT; i++) {
+  render(siteHeaderElement, createSiteWaypointTemplate(tasks[i], i + 1));
+}
 
 // дополнительно
 const siteTripInMainElement = siteMainInHeaderElement.querySelector(`.trip-main`);
