@@ -6,11 +6,10 @@ import {createSiteWaypointTemplate} from "./view/site-waypoint.js";
 import {createSiteInfoRouteTemplate} from "./view/site-info-route.js";
 import {createSitePriceTemplate} from "./view/site-price.js";
 import {generateWaypoint} from "./mock/waypoint.js";
-import {render} from "./mock/utils";
+import {render} from "./mock/utils.js";
 
 const WAYPOINT_COUNT = 15;
 const tasks = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint);
-console.log(tasks);
 
 const siteMainInHeaderElement = document.querySelector(`.page-header`);
 const siteHeaderInHeaderElement = siteMainInHeaderElement.querySelector(`.trip-main__trip-controls`);

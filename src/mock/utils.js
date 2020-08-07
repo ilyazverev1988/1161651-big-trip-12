@@ -17,7 +17,7 @@ export const getRandomArray = (arr, len) => {
   return arr;
 };
 
-export const addZeroForTime = (time) => {
+const addZeroForTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
@@ -31,4 +31,8 @@ export const formatTimeFromMs = (ms) => {
   hours = hours !== `00` ? `${hours}H` : ``;
   mins = mins !== `00` ? `${mins}M` : ``;
   return `${days} ${hours} ${mins}`;
+};
+
+export const getFormatDateForEdit = (time) => {
+  return `${addZeroForTime(time.getDate())}/${addZeroForTime(time.getMonth())}/${addZeroForTime(time.getFullYear().toString().substr(-2))} ${addZeroForTime(time.getHours())}:${addZeroForTime(time.getMinutes())}`;
 };

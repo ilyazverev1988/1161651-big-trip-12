@@ -1,4 +1,5 @@
-import {CITIES, getFormatDateForEdit} from "../mock/waypoint";
+import {CITIES} from "../mock/waypoint.js";
+import {getFormatDateForEdit} from "../mock/utils.js";
 
 
 const createListCity = (cities) => {

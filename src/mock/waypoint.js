@@ -1,5 +1,4 @@
-import {getRandomInteger, getRandomArray, addZeroForTime} from "./utils.js";
-
+import {getRandomInteger, getRandomArray} from "./utils.js";
 
 export const MONTH_NAMES = [
   `Jan`,
@@ -16,21 +15,21 @@ export const MONTH_NAMES = [
   `Dec`,
 ];
 
-const generateTypeWaypoint = () => {
-  const descriptions = [
-    {name: `Taxi`, placeholder: `to`},
-    {name: `Bus`, placeholder: `to`},
-    {name: `Ship`, placeholder: `to`},
-    {name: `Transport`, placeholder: `to`},
-    {name: `Drive`, placeholder: `to`},
-    {name: `Flight`, placeholder: `to`},
-    {name: `Check-in`, placeholder: `in`},
-    {name: `Sightseeing`, placeholder: `in`},
-    {name: `Restaurant`, placeholder: `in`},
-  ];
+const EVENTS = [
+  {name: `Taxi`, placeholder: `to`},
+  {name: `Bus`, placeholder: `to`},
+  {name: `Ship`, placeholder: `to`},
+  {name: `Transport`, placeholder: `to`},
+  {name: `Drive`, placeholder: `to`},
+  {name: `Flight`, placeholder: `to`},
+  {name: `Check-in`, placeholder: `in`},
+  {name: `Sightseeing`, placeholder: `in`},
+  {name: `Restaurant`, placeholder: `in`},
+];
 
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
-  return descriptions[randomIndex];
+const sampleOneFromSet = (set) => {
+  const randomIndex = getRandomInteger(0, set.length - 1);
+  return set[randomIndex];
 };
 
 export const CITIES = [
@@ -42,11 +41,6 @@ export const CITIES = [
   `Krasnodar`,
   `Kaliningrad`,
 ];
-
-const generateCity = (cities) => {
-  const randomIndex = getRandomInteger(0, cities.length - 1);
-  return cities[randomIndex];
-};
 
 const generateOption = () => {
   const descriptions = [
@@ -71,10 +65,6 @@ const generateDescription = () => {
 
 const PHOTO_ADDRESS = `http://picsum.photos/248/152?r=${Math.random()}`;
 
-export const getFormatDateForEdit = (time) => {
-  return `${addZeroForTime(time.getDate())}/${addZeroForTime(time.getMonth())}/${addZeroForTime(time.getFullYear().toString().substr(-2))} ${addZeroForTime(time.getHours())}:${addZeroForTime(time.getMinutes())}`;
-};
-
 export const generateWaypoint = () => {
   const timeBegin = new Date();
   const dayRange = getRandomInteger(-50, 50);
@@ -87,8 +77,8 @@ export const generateWaypoint = () => {
   const timeEnd = new Date(timeBegin.getTime());
   timeEnd.setMinutes(timeEnd.getMinutes() + durationMinutes);
   return {
-    typeWaypoint: generateTypeWaypoint(),
-    city: generateCity(CITIES),
+    typeWaypoint: sampleOneFromSet(EVENTS),
+    city: sampleOneFromSet(CITIES),
     option: generateOption(),
     description: generateDescription(),
     photo: PHOTO_ADDRESS,
