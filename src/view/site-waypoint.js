@@ -1,4 +1,3 @@
-import {MONTH_NAMES} from "../mock/waypoint.js";
 import {formatTimeFromMs} from "../mock/utils";
 
 const createOption = (options) => {
@@ -22,17 +21,11 @@ const createOption = (options) => {
   }
 };
 
-export const createSiteWaypointTemplate = (waypoint, dayCounter) => {
-  const {typeWaypoint, city, option, timeBegin, timeEnd, cost} = waypoint;
+export const createSiteWaypointTemplate = (waypoint) => {
+  const {typeWaypoint, city, options, timeBegin, timeEnd, cost} = waypoint;
 
   return (
-    `<ul class="trip-days">
-            <li class="trip-days__item  day">
-              <div class="day__info">
-                <span class="day__counter">${dayCounter}</span>
-                <time class="day__date" datetime="2019-03-18">${MONTH_NAMES[timeBegin.getMonth()]} ${timeBegin.getDate()}</time>
-              </div>
-              <ul class="trip-events__list">
+    `
                     <li class="trip-events__item">
                   <div class="event">
                     <div class="event__type">
@@ -52,7 +45,7 @@ export const createSiteWaypointTemplate = (waypoint, dayCounter) => {
                     <p class="event__price">
                       €&nbsp;<span class="event__price-value">${cost}</span>
                     </p>
-                    ${createOption(option)}
+                    ${createOption(options)}
     </ul>`
   );
 };

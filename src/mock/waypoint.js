@@ -1,5 +1,14 @@
 import {getRandomInteger, getRandomArray} from "./utils.js";
 
+const NUMBER_REPETITIONS = 5;
+const DATE_RANGE = 2;
+const LOWER_HOUR_RANGE = 0;
+const UPPER_HOUR_RANGE = 23;
+const LOWER_MINUTE_RANGE = 15;
+const UPPER_MINUTE_RANGE = 300;
+const LOWER_PRICE_RANGE = 10;
+const UPPER_PRICE_RANGE = 200;
+
 export const MONTH_NAMES = [
   `Jan`,
   `Feb`,
@@ -43,7 +52,7 @@ export const CITIES = [
 ];
 
 const generateOption = () => {
-  const descriptions = [
+  const descriptionOptions = [
     {option: `Add luggage`, cost: `30`},
     {option: `Switch to comfort class`, cost: `100`},
     {option: `Add meal`, cost: `15`},
@@ -51,39 +60,45 @@ const generateOption = () => {
     {option: `Travel by train`, cost: `40`},
   ];
 
-  const randomQuantity = getRandomInteger(0, descriptions.length - 1);
-  return getRandomArray(descriptions, randomQuantity);
+  const randomQuantity = getRandomInteger(0, descriptionOptions.length);
+  return getRandomArray(descriptionOptions, randomQuantity);
 };
 
 const generateDescription = () => {
-  const NUMBER_SENTENCE = 5;
   const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-  const sentences = description.split(/\./).map((item)=>(item + `.`));
-  const randomQuantity = getRandomInteger(1, NUMBER_SENTENCE);
+  let sentences = description.split(`. `).map((item) => (item + `. `));
+  let lastElement = sentences.pop().slice(0, -2);
+  sentences.push(lastElement);
+  const randomQuantity = getRandomInteger(1, NUMBER_REPETITIONS);
   return getRandomArray(sentences, randomQuantity);
 };
 
-const PHOTO_ADDRESS = `http://picsum.photos/248/152?r=${Math.random()}`;
+const generatePhotos = () => {
+  const generatePhoto = () => `http://picsum.photos/248/152?r=${Math.random()}`;
+  let randomQuantity = getRandomInteger(1, NUMBER_REPETITIONS);
+  return Array(randomQuantity).fill(``).map(generatePhoto);
+};
 
 export const generateWaypoint = () => {
   const timeBegin = new Date();
-  const dayRange = getRandomInteger(-50, 50);
+  const dayRange = getRandomInteger(-DATE_RANGE, DATE_RANGE);
   const day = timeBegin.getDate();
   timeBegin.setDate(day + dayRange);
-  const hoursRange = getRandomInteger(0, 23);
+  const hoursRange = getRandomInteger(LOWER_HOUR_RANGE, UPPER_HOUR_RANGE);
   timeBegin.setHours(hoursRange);
 
-  const durationMinutes = getRandomInteger(15, 300);
+  const durationMinutes = getRandomInteger(LOWER_MINUTE_RANGE, UPPER_MINUTE_RANGE);
   const timeEnd = new Date(timeBegin.getTime());
   timeEnd.setMinutes(timeEnd.getMinutes() + durationMinutes);
   return {
     typeWaypoint: sampleOneFromSet(EVENTS),
     city: sampleOneFromSet(CITIES),
-    option: generateOption(),
-    description: generateDescription(),
-    photo: PHOTO_ADDRESS,
+    options: generateOption(),
+    descriptions: generateDescription(),
+    photos: generatePhotos(),
     timeBegin,
     timeEnd,
-    cost: getRandomInteger(0, 100),
+    cost: getRandomInteger(LOWER_PRICE_RANGE, UPPER_PRICE_RANGE),
   };
 };
+

@@ -9,12 +9,16 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const getRandomArray = (arr, len) => {
-  arr.sort(function () {
-    return Math.random() > 0.5;
-  });
-  arr.length = len;
-  return arr;
+export const getRandomArray = (data, end) => {
+  let j;
+  let temp;
+  for (let i = data.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = data[j];
+    data[j] = data[i];
+    data[i] = temp;
+  }
+  return data.slice(0, end);
 };
 
 const addZeroForTime = (time) => {
@@ -35,4 +39,12 @@ export const formatTimeFromMs = (ms) => {
 
 export const getFormatDateForEdit = (time) => {
   return `${addZeroForTime(time.getDate())}/${addZeroForTime(time.getMonth())}/${addZeroForTime(time.getFullYear().toString().substr(-2))} ${addZeroForTime(time.getHours())}:${addZeroForTime(time.getMinutes())}`;
+};
+
+export const getDatesDuration = (date1InInt, date2InInt) => {
+  const date1 = new Date(date1InInt);
+  const date2 = new Date(date2InInt);
+  return {
+    daysBetween: date2.getDate() - date1.getDate(),
+  };
 };

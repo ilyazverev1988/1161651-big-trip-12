@@ -1,19 +1,23 @@
 import {CITIES} from "../mock/waypoint.js";
 import {getFormatDateForEdit} from "../mock/utils.js";
 
-
 const createListCity = (cities) => {
   return cities.map((city) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 };
 
+const createListPhoto = (photos) => {
+  return photos.map((photo) => {
+    return (`<img class="event__photo" src="${photo}" alt="Event photo">`);
+  }).join(`\n`);
+};
+
 const createListOffer = (offers, index = 1) => {
   if (offers.length > 0) {
     const offerElement = offers.map((offer) =>
-      `<div class="event__available-offers">
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.option.replace(/\s/g, ``)}-${index}" type="checkbox" name="event-offer-${offer.option.replace(/\s/g, ``)}" checked="">
+      `<div class="event__offer-selector">
+                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.option.replace(/\s/g, ``)}-${index}" type="checkbox" name="event-offer-${offer.option.replace(/\s/g, ``)}" ${Math.random() > 0.5 ? `checked` : ``}="">
                     <label class="event__offer-label" for="event-offer-${offer.option.replace(/\s/g, ``)}-${index}">
                       <span class="event__offer-title">${offer.option}</span>
                       +
@@ -23,7 +27,9 @@ const createListOffer = (offers, index = 1) => {
     ).join(`\n`);
     return `<section class="event__section  event__section--offers">
                 <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+                <div class="event__available-offers">
                                 ${offerElement}
+                                </div>
                         </section>`;
   } else {
     return ` `;
@@ -37,7 +43,7 @@ const createDescription = (descriptions) => {
 };
 
 export const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) => {
-  const {typeWaypoint, city, option, description, photo, timeBegin, timeEnd, cost} = waypoint;
+  const {typeWaypoint, city, options, descriptions, photos, timeBegin, timeEnd, cost} = waypoint;
 
   return (
     `<form class="trip-events__item event  event--edit" action="#" method="post">
@@ -146,19 +152,20 @@ export const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) 
             ${conditionFirstEvent ? `` :
       `<section class ="event__details">
 
-      ${createListOffer(option)}
+      ${createListOffer(options)}
 
      <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${createDescription(description)}</p>
+    <p class="event__destination-description">${createDescription(descriptions)}</p>
 
     <div class="event__photos-container">
     <div class="event__photos-tape">
-    <img class="event__photo" src="${photo}" alt="Event photo">
+    ${createListPhoto(photos)}
     </div>
     </div>
     </section>
     </section>`}
     </form>`
   );
-};
+}
+;
