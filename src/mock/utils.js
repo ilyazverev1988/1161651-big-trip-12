@@ -11,12 +11,9 @@ export const getRandomInteger = (a = 0, b = 1) => {
 
 export const getRandomArray = (data, end) => {
   let j;
-  let temp;
   for (let i = data.length - 1; i > 0; i--) {
     j = Math.floor(Math.random() * (i + 1));
-    temp = data[j];
-    data[j] = data[i];
-    data[i] = temp;
+    [data[i], data[j]] = [data[j], data[i]];
   }
   return data.slice(0, end);
 };
