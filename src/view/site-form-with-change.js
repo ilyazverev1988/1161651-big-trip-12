@@ -1,5 +1,5 @@
 import {CITIES} from "../mock/waypoint.js";
-import {getFormatDateForEdit} from "../mock/utils.js";
+import {getFormatDateForEdit, createElement} from "../mock/utils.js";
 
 const createListCity = (cities) => {
   return cities.map((city) => {
@@ -42,11 +42,12 @@ const createDescription = (descriptions) => {
   });
 };
 
-export const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) => {
+const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) => {
   const {typeWaypoint, city, options, descriptions, photos, timeBegin, timeEnd, cost} = waypoint;
 
   return (
-    `<form class="trip-events__item event  event--edit" action="#" method="post">
+    `<li class="trip-events__item">
+        <form class="trip-events__item event  event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
                 <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -165,7 +166,31 @@ export const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) 
     </div>
     </section>
     </section>`}
-    </form>`
+    </form>
+    </li>`
   );
+};
+
+export default class WayPointEdit {
+  constructor(waypoint, conditionFirstEvent) {
+    this._conditionFirstEvent = conditionFirstEvent;
+    this._waypoint = waypoint;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteFormWithChangeTemplate(this._waypoint, this._conditionFirstEvent);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
 }
-;

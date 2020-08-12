@@ -1,4 +1,5 @@
 import {formatTimeFromMs} from "../mock/utils";
+import {createElement} from "../mock/utils";
 
 const createOption = (options) => {
   if (options.length) {
@@ -9,24 +10,18 @@ const createOption = (options) => {
       €&nbsp;<span class="event__offer-price">${event.cost}</span>
         </li>`
     ).join(`\n`);
-    return `<h4 class="visually-hidden">Offers:</h4>
-              <ul class="event__selected-offers">
-               ${optionElement}
-               </ul>
-  <button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>`;
+    return optionElement;
   } else {
     return ``;
   }
 };
 
+
 export const createSiteWaypointTemplate = (waypoint) => {
   const {typeWaypoint, city, options, timeBegin, timeEnd, cost} = waypoint;
 
   return (
-    `
-                    <li class="trip-events__item">
+    `<li class="trip-events__item">
                   <div class="event">
                     <div class="event__type">
                       <img class="event__type-icon" width="42" height="42" src="img/icons/${typeWaypoint.name.toLowerCase()}.png" alt="Event type icon">
@@ -45,7 +40,38 @@ export const createSiteWaypointTemplate = (waypoint) => {
                     <p class="event__price">
                       €&nbsp;<span class="event__price-value">${cost}</span>
                     </p>
+
+                    <h4 class="visually-hidden">Offers:</h4>
+                    <ul class="event__selected-offers">
                     ${createOption(options)}
-    </ul>`
+                    </ul>
+                    <button class="event__rollup-btn" type="button">
+                    <span class="visually-hidden">Open event</span>
+                    </button>
+                    </div>
+                    </li>`
   );
 };
+
+export default class SiteWayPointView {
+  constructor(wayPoint) {
+    this._element = null;
+    this._wayPoint = wayPoint;
+  }
+
+  getTemplate() {
+    return createSiteWaypointTemplate(this._wayPoint);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
