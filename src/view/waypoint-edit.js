@@ -171,7 +171,7 @@ const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) => {
   );
 };
 
-export default class WayPointEdit {
+export default class WaypointEdit {
   constructor(waypoint, conditionFirstEvent) {
     this._conditionFirstEvent = conditionFirstEvent;
     this._waypoint = waypoint;

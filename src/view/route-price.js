@@ -1,19 +1,20 @@
 import {createElement} from "../mock/utils";
 
-const createDaysTemplate = () => {
+const createSitePriceTemplate = () => {
   return (
-    `<ul class="trip-days">
-    </ul>`
+    `<p class="trip-info__cost">
+              Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
+            </p>`
   );
 };
 
-export default class SiteDaysView {
+export default class RoutePrice {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createDaysTemplate();
+    return createSitePriceTemplate();
   }
 
   getElement() {

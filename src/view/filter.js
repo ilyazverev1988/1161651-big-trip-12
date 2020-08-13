@@ -23,7 +23,7 @@ const createSiteFilterTemplate = () => {
   );
 };
 
-export default class SiteFilterView {
+export default class Filter {
   constructor() {
     this._element = null;
   }

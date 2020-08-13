@@ -15,7 +15,7 @@ export const createDayTemplate = (dayNumber, wayPoint) => {
   );
 };
 
-export default class SiteDayView {
+export default class Day {
   constructor(dayNumber, wayPoint) {
     this._element = null;
     this._dayNumber = dayNumber;

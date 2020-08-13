@@ -53,7 +53,7 @@ export const createSiteWaypointTemplate = (waypoint) => {
   );
 };
 
-export default class SiteWayPointView {
+export default class WayPoint {
   constructor(wayPoint) {
     this._element = null;
     this._wayPoint = wayPoint;
