@@ -1,50 +1,79 @@
-import {createSiteMenuTemplate} from "./view/site-menu.js";
-import {createSiteFilterTemplate} from "./view/site-filter.js";
-import {createSiteSortTemplate} from "./view/site-sort.js";
-import {createSiteFormWithChangeTemplate} from "./view/site-form-with-change";
-import {createSiteWaypointTemplate} from "./view/site-waypoint.js";
-import {createSiteInfoRouteTemplate} from "./view/site-info-route.js";
-import {createSitePriceTemplate} from "./view/site-price.js";
-import {generateWaypoint} from "./mock/waypoint.js";
-import {createDaysTemplate} from "./view/site-days.js";
-import {createDayTemplate} from "./view/site-day.js";
-import {render, getDatesDuration} from "./mock/utils.js";
+import RouteInfoComponent from "./view/route-info";
+import RouteCostComponent from "./view/route-price";
+import MenuViewComponent from "./view/menu";
+import FilterComponent from "./view/filter";
+import SortComponent from "./view/sort";
+import DaysComponent from "./view/days";
+import DayComponent from "./view/day";
+import WayPointComponent from "./view/waypoint";
+import WayPointEditComponent from "./view/waypoint-edit";
+import {generateWaypoint} from "./mock/waypoint";
+import {getDatesDuration, render} from "./mock/utils";
 
 const WAYPOINT_COUNT = 15;
-let tasks = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint).sort((a, b) => a.timeBegin - b.timeBegin);
-
-const siteMainInHeaderElement = document.querySelector(`.page-header`);
-const siteHeaderInHeaderElement = siteMainInHeaderElement.querySelector(`.trip-main__trip-controls`);
-
-render(siteHeaderInHeaderElement, createSiteMenuTemplate());
-render(siteHeaderInHeaderElement, createSiteFilterTemplate());
-
-const siteMainElement = document.querySelector(`.page-main`);
-const siteHeaderElement = siteMainElement.querySelector(`.trip-events`);
-
-render(siteHeaderElement, createSiteSortTemplate());
-render(siteHeaderElement, createDaysTemplate());
-
-const days = document.querySelector(`.trip-days`);
-let dayNumber = 0;
-render(days, createDayTemplate(dayNumber + 1, tasks[0]));
-let dayEventsList = days.querySelector(`.trip-days__item:last-child .trip-events__list`);
-render(dayEventsList, createSiteFormWithChangeTemplate(tasks[0], false));
-
-tasks.forEach((task, index) => {
-  if (index > 0) {
-    if (getDatesDuration(tasks[0].timeBegin, task.timeBegin).daysBetween > dayNumber) {
-      dayNumber = getDatesDuration(tasks[0].timeBegin, task.timeBegin).daysBetween;
-      render(days, createDayTemplate(dayNumber + 1, task));
-    }
-    dayEventsList = days.querySelector(`.trip-days__item:last-child .trip-events__list`);
-    render(dayEventsList, createSiteWaypointTemplate(task));
-  }
-});
 
 // дополнительно
-const siteTripInMainElement = siteMainInHeaderElement.querySelector(`.trip-main`);
-render(siteTripInMainElement, createSiteInfoRouteTemplate(), `afterbegin`);
+const siteTripInMainElement = document.querySelector(`.trip-main`);
+render(siteTripInMainElement, new RouteInfoComponent().getElement(), `afterbegin`);
 
-const siteTripInfoMainElement = siteMainInHeaderElement.querySelector(`.trip-main__trip-info`);
-render(siteTripInfoMainElement, createSitePriceTemplate());
+const siteTripInfoMainElement = siteTripInMainElement.querySelector(`.trip-info__main`);
+render(siteTripInfoMainElement, new RouteCostComponent().getElement(), `afterend`);
+//
+const tripControls = siteTripInMainElement.querySelector(`.trip-controls`);
+const tripMenu = tripControls.querySelector(`h2`);
+render(tripMenu, new MenuViewComponent().getElement(), `afterend`);
+render(tripControls, new FilterComponent().getElement());
+
+const renderRoutePoint = (routePointList, routePoint) => {
+  const onRollupButtonClick = () => {
+    routePointList.replaceChild(routePointEditComponent.getElement(), routePointComponent.getElement());
+  };
+
+  const onEditFormSubmit = (evt) => {
+    evt.preventDefault();
+    routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+  };
+
+  const onEditFormClose = (evt) => {
+    evt.preventDefault();
+    routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+  };
+
+  const routePointComponent = new WayPointComponent(routePoint);
+  const rollupButton = routePointComponent.getElement().querySelector(`.event__rollup-btn`);
+  rollupButton.addEventListener(`click`, onRollupButtonClick);
+
+  const routePointEditComponent = new WayPointEditComponent(routePoint, false);
+  const editForm = routePointEditComponent.getElement().querySelector(`form`);
+  editForm.addEventListener(`submit`, onEditFormSubmit);
+  editForm.addEventListener(`reset`, onEditFormClose);
+
+  render(routePointList, routePointComponent.getElement());
+};
+
+const renderRouteTable = (tripEvents, routePoints) => {
+  const tripSorting = tripEvents.querySelector(`h2`);
+  render(tripSorting, new SortComponent().getElement(), `afterend`);
+
+  const daysComponent = new DaysComponent();
+  render(tripEvents, daysComponent.getElement());
+
+  let dayNumber = 0;
+  let dayComponent = new DayComponent(dayNumber + 1, routePoints[0]);
+  render(daysComponent.getElement(), dayComponent.getElement());
+
+  routePoints.forEach((routePoint, index) => {
+    if (index > 0) {
+      if (getDatesDuration(routePoints[0].timeBegin, routePoint.timeBegin).daysBetween > dayNumber) {
+        dayNumber = getDatesDuration(routePoints[0].timeBegin, routePoint.timeBegin).daysBetween;
+        dayComponent = new DayComponent(dayNumber + 1, routePoint);
+        render(daysComponent.getElement(), dayComponent.getElement());
+      }
+      renderRoutePoint(dayComponent.getElement().querySelector(`.trip-events__list`), routePoint);
+    }
+  });
+};
+
+const tripEvents = document.querySelector(`.trip-events`);
+const tasks = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint).sort((a, b) => a.timeBegin - b.timeBegin);
+renderRouteTable(tripEvents, tasks);
