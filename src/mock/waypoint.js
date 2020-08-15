@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArray} from "./utils.js";
+import {getRandomInteger, getRandomArray} from "../utils/common";
 
 const NUMBER_REPETITIONS = 5;
 const DATE_RANGE = 2;

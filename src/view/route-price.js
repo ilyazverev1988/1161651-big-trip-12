@@ -1,4 +1,4 @@
-import {createElement} from "../mock/utils";
+import AbstractView from "./abstract.js";
 
 const createSitePriceTemplate = () => {
   return (
@@ -8,24 +8,8 @@ const createSitePriceTemplate = () => {
   );
 };
 
-export default class RoutePrice {
-  constructor() {
-    this._element = null;
-  }
-
+export default class RoutePrice extends AbstractView {
   getTemplate() {
     return createSitePriceTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,6 @@
 import {CITIES} from "../mock/waypoint.js";
-import {getFormatDateForEdit, createElement} from "../mock/utils.js";
+import {getFormatDateForEdit} from "../utils/routepoint.js";
+import AbstractView from "./abstract.js";
 
 const createListCity = (cities) => {
   return cities.map((city) => {
@@ -171,26 +172,30 @@ const createSiteFormWithChangeTemplate = (waypoint, conditionFirstEvent) => {
   );
 };
 
-export default class WaypointEdit {
+export default class WaypointEdit extends AbstractView {
   constructor(waypoint, conditionFirstEvent) {
+    super();
     this._conditionFirstEvent = conditionFirstEvent;
     this._waypoint = waypoint;
-    this._element = null;
+    this._closeRoutePointClickHandler = this._closeRoutePointClickHandler.bind(this);
   }
 
   getTemplate() {
     return createSiteFormWithChangeTemplate(this._waypoint, this._conditionFirstEvent);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _closeRoutePointClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 
-  removeElement() {
-    this._element = null;
+  setSubmitRoutePointClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this. _closeRoutePointClickHandler);
+  }
+
+  setResetRoutePointClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`form`).addEventListener(`reset`, this. _closeRoutePointClickHandler);
   }
 }
