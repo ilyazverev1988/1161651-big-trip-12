@@ -38,23 +38,21 @@ if (tasks.length === 0) {
 
     const openEditForm = () => {
       routePointList.replaceChild(routePointEditComponent.getElement(), routePointComponent.getElement());
+      document.addEventListener(`keydown`, onEscKeyDown);
     };
 
     const onRollupButtonClick = () => {
       openEditForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
     };
 
     const onEditFormSubmit = (evt) => {
       evt.preventDefault();
       closeEditForm();
-      document.removeEventListener(`keydown`, onEscKeyDown);
     };
 
     const onEditFormClose = (evt) => {
       evt.preventDefault();
       closeEditForm();
-      document.removeEventListener(`keydown`, onEscKeyDown);
     };
 
     const onEscKeyDown = (evt) => {
