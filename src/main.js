@@ -32,6 +32,10 @@ if (tasks.length === 0) {
   render(tripControls, new FilterComponent().getElement());
 
   const renderRoutePoint = (routePointList, routePoint) => {
+    const closeEditForm = () => {
+      routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+    };
+
     const onRollupButtonClick = () => {
       routePointList.replaceChild(routePointEditComponent.getElement(), routePointComponent.getElement());
       document.addEventListener(`keydown`, onEscKeyDown);
@@ -39,20 +43,20 @@ if (tasks.length === 0) {
 
     const onEditFormSubmit = (evt) => {
       evt.preventDefault();
-      routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+      closeEditForm();
       document.removeEventListener(`keydown`, onEscKeyDown);
     };
 
     const onEditFormClose = (evt) => {
       evt.preventDefault();
-      routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+      closeEditForm();
       document.removeEventListener(`keydown`, onEscKeyDown);
     };
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();
-        routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+        closeEditForm();
       }
     };
 
