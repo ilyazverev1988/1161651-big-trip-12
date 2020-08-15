@@ -34,6 +34,7 @@ if (tasks.length === 0) {
   const renderRoutePoint = (routePointList, routePoint) => {
     const closeEditForm = () => {
       routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
+      document.removeEventListener(`keydown`, onEscKeyDown);
     };
 
     const openEditForm = () => {
