@@ -36,8 +36,12 @@ if (tasks.length === 0) {
       routePointList.replaceChild(routePointComponent.getElement(), routePointEditComponent.getElement());
     };
 
-    const onRollupButtonClick = () => {
+    const openEditForm = () => {
       routePointList.replaceChild(routePointEditComponent.getElement(), routePointComponent.getElement());
+    };
+
+    const onRollupButtonClick = () => {
+      openEditForm();
       document.addEventListener(`keydown`, onEscKeyDown);
     };
 
