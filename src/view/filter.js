@@ -1,4 +1,4 @@
-import {createElement} from "../mock/utils";
+import AbstractView from "./abstract.js";
 
 const createSiteFilterTemplate = () => {
   return (
@@ -23,24 +23,8 @@ const createSiteFilterTemplate = () => {
   );
 };
 
-export default class Filter {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Filter extends AbstractView {
   getTemplate() {
     return createSiteFilterTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

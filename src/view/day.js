@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from "../mock/waypoint.js";
-import {createElement} from "../mock/utils";
+import AbstractView from "./abstract.js";
 
 export const createDayTemplate = (dayNumber, wayPoint) => {
   const {timeBegin} = wayPoint;
@@ -15,26 +15,14 @@ export const createDayTemplate = (dayNumber, wayPoint) => {
   );
 };
 
-export default class Day {
+export default class Day extends AbstractView {
   constructor(dayNumber, wayPoint) {
-    this._element = null;
+    super();
     this._dayNumber = dayNumber;
     this._wayPoint = wayPoint;
   }
 
   getTemplate() {
     return createDayTemplate(this._dayNumber, this._wayPoint);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

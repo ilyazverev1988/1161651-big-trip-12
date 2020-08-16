@@ -1,4 +1,4 @@
-import {createElement} from "../mock/utils";
+import AbstractView from "./abstract.js";
 
 const createNoWaypointTemplate = () => {
   return (
@@ -6,24 +6,8 @@ const createNoWaypointTemplate = () => {
   );
 };
 
-export default class NoWaypoint {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoWaypoint extends AbstractView {
   getTemplate() {
     return createNoWaypointTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

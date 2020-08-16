@@ -1,5 +1,5 @@
-import {formatTimeFromMs} from "../mock/utils";
-import {createElement} from "../mock/utils";
+import {formatTimeFromMs} from "../utils/routepoint";
+import AbstractView from "./abstract.js";
 
 const createOption = (options) => {
   if (options.length) {
@@ -53,25 +53,24 @@ export const createSiteWaypointTemplate = (waypoint) => {
   );
 };
 
-export default class WayPoint {
+export default class WayPoint extends AbstractView {
   constructor(wayPoint) {
-    this._element = null;
+    super();
     this._wayPoint = wayPoint;
+    this._openRoutePointClickHandler = this._openRoutePointClickHandler.bind(this);
   }
 
   getTemplate() {
     return createSiteWaypointTemplate(this._wayPoint);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _openRoutePointClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.open();
   }
 
-  removeElement() {
-    this._element = null;
+  setOpenRoutePointClickHandler(callback) {
+    this._callback.open = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._openRoutePointClickHandler);
   }
 }
