@@ -25,3 +25,9 @@ export const getDatesDuration = (date1InInt, date2InInt) => {
     daysBetween: date2.getDate() - date1.getDate(),
   };
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  TIME: `time`,
+  PRICE: `price`
+};
