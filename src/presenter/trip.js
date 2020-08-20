@@ -3,7 +3,7 @@ import WayPointEditComponent from "../view/waypoint-edit";
 import SortComponent from "../view/sort";
 import DaysComponent from "../view/days";
 import DayComponent from "../view/day";
-import {getDatesDuration} from "../utils/routepoint";
+import {getDatesDuration, SortType} from "../utils/routepoint";
 import {render, replace} from "../utils/render";
 import NoWaypoint from "../view/no-waypoint";
 
@@ -54,40 +54,63 @@ const renderRoutePoint = (routePointList, routePoint) => {
   render(routePointList, routePointComponent);
 };
 
-const renderRouteTable = (tripEvents, routePoints) => {
-  const tripSorting = tripEvents.querySelector(`h2`);
-  const tripEvent = document.querySelector(`.trip-events`);
+const getSortRoutePoint = (routePoints, typeSort) => {
+  let sortRoutePoints = [];
+  const showRoutePoints = routePoints.slice();
 
-  const daysComponent = new DaysComponent();
-  render(tripEvents, daysComponent);
-  if (routePoints.length === 0) {
-    render(tripEvent, new NoWaypoint(), `afterend`);
-  } else {
-    render(tripSorting, new SortComponent(), `afterend`);
-    let dayNumber = 0;
-    let dayComponent = new DayComponent(dayNumber + 1, routePoints[0]);
-    render(daysComponent, dayComponent);
-
-    routePoints.forEach((routePoint, index) => {
-      if (index > 0) {
-        if (getDatesDuration(routePoints[0].timeBegin, routePoint.timeBegin).daysBetween > dayNumber) {
-          dayNumber = getDatesDuration(routePoints[0].timeBegin, routePoint.timeBegin).daysBetween;
-          dayComponent = new DayComponent(dayNumber + 1, routePoint);
-          render(daysComponent, dayComponent);
-        }
-        renderRoutePoint(dayComponent.getElement().querySelector(`.trip-events__list`), routePoint);
-      }
-    });
+  switch (typeSort) {
+    case SortType.DEFAULT:
+      sortRoutePoints = showRoutePoints;
+      break;
+    case SortType.PRICE:
+      sortRoutePoints = showRoutePoints.sort((a, b) => b.cost - a.cost);
+      break;
+    case SortType.TIME:
+      sortRoutePoints = showRoutePoints.sort((a, b) => (b.timeEnd - b.timeBegin) - (a.timeEnd - a.timeBegin));
+      break;
   }
+  return sortRoutePoints.slice();
 };
 
+const renderRoutePoints = (daysComponent, routePoints, typeSort) => {
+  if (routePoints.length > 0) {
+    let dayNumber = 0;
+    let dayComponent = new DayComponent(dayNumber + 1, routePoints[0], typeSort !== SortType.DEFAULT);
+    render(daysComponent.getElement(), dayComponent);
+
+    routePoints.forEach((routePoint) => {
+      if (getDatesDuration(routePoints[0].timeBegin, routePoint.timeBegin).daysBetween > dayNumber && typeSort === SortType.DEFAULT) {
+        dayNumber = getDatesDuration(routePoints[0].timeBegin, routePoint.timeBegin).daysBetween;
+        dayComponent = new DayComponent(dayNumber + 1, routePoint);
+        render(daysComponent.getElement(), dayComponent);
+      }
+      renderRoutePoint(dayComponent.getElement().querySelector(`.trip-events__list`), routePoint);
+    });
+  } else {
+    render(daysComponent.getElement(), new NoWaypoint());
+  }
+};
 
 export default class Trip {
   constructor(container) {
     this._container = container;
+    this._sortComponent = new SortComponent();
   }
 
   render(routePoints) {
-    renderRouteTable(this._container, routePoints);
+    const tripEvents = this._container;
+    const tripSorting = tripEvents.querySelector(`h2`);
+    render(tripSorting, this._sortComponent.getElement(), `afterend`);
+
+    const daysComponent = new DaysComponent();
+    render(tripEvents, daysComponent.getElement());
+
+    renderRoutePoints(daysComponent, routePoints, SortType.DEFAULT);
+
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      const sortRoutePoints = getSortRoutePoint(routePoints, sortType);
+      daysComponent.getElement().innerHTML = ``;
+      renderRoutePoints(daysComponent, sortRoutePoints, sortType);
+    });
   }
 }

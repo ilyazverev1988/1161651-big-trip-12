@@ -9,7 +9,6 @@ import Trip from "./presenter/trip";
 const WAYPOINT_COUNT = 15;
 const tasks = new Array(WAYPOINT_COUNT).fill().map(generateWaypoint).sort((a, b) => a.timeBegin - b.timeBegin);
 
-// дополнительно
 const siteTripInMainElement = document.querySelector(`.trip-main`);
 const tripEvent = document.querySelector(`.trip-events`);
 render(siteTripInMainElement, new RouteInfoComponent(), `afterbegin`);
